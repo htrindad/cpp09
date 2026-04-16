@@ -6,7 +6,7 @@
 /*   By: htrindad <htrindad@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/14 09:46:15 by htrindad          #+#    #+#             */
-/*   Updated: 2026/04/14 10:38:15 by htrindad         ###   ########.fr       */
+/*   Updated: 2026/04/16 19:22:17 by htrindad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ class BitcoinExchange
 		BitcoinExchange(const BitcoinExchange &ref);
 		BitcoinExchange &operator=(const BitcoinExchange &ref);
 	public:
-		static void exchanging(std::string &file);
+		static void exchanging(const std::string &file);
 
 	class FileNotOpen : public std::exception
 	{
