@@ -6,7 +6,7 @@
 /*   By: htrindad <htrindad@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/14 09:46:15 by htrindad          #+#    #+#             */
-/*   Updated: 2026/04/16 19:22:17 by htrindad         ###   ########.fr       */
+/*   Updated: 2026/04/22 20:24:36 by htrindad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <iostream>
 #include <map>
 #include <exception>
+#include <stdexcept>
 #include <fstream>
 #include <sstream>
 #include <string>
