@@ -6,7 +6,7 @@ CPPFLAGS = -Wall -Werror -Wextra -O3 -std=c++98
 %.o: %.cpp
 	c++ $(CPPFLAGS) -c $< -o $@
 
-$(NAME):
+$(NAME): $(OBJ)
 	c++ $(CPPFLAGS) $(OBJ) -o $(NAME)
 
 all: $(NAME)
