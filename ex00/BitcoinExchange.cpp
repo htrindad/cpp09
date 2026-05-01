@@ -6,11 +6,11 @@
 /*   By: htrindad <htrindad@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/14 09:57:45 by htrindad          #+#    #+#             */
-/*   Updated: 2026/04/26 20:20:35 by htrindad         ###   ########.fr       */
+/*   Updated: 2026/05/01 04:10:31 by htrindad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "BitcoinExchange.h"
+#include "BitcoinExchange.hpp"
 
 //Exceptions
 const char *BitcoinExchange::FileNotOpen::what() const throw() { return "Error opening file"; }

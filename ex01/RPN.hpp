@@ -1,29 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   RPN.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: htrindad <htrindad@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/14 09:55:23 by htrindad          #+#    #+#             */
-/*   Updated: 2026/05/01 04:10:26 by htrindad         ###   ########.fr       */
+/*   Created: 2026/05/01 03:55:06 by htrindad          #+#    #+#             */
+/*   Updated: 2026/05/01 04:09:52 by htrindad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "BitcoinExchange.hpp"
+#pragma once
 
-int main(int ac, char **av)
+class RPN
 {
-	if (ac != 2)
-		return (std::cerr << "Need an argument\n", -1);
-	try
-	{
-		BitcoinExchange::exchanging(av[1]);
-	}
-	catch (std::exception &e)
-	{
-		std::cerr << "Impossible to comply, due to " << e.what() << "\n\n 'data.csv' non-existent, or failure to open the txt file.\n";
-		return -1;
-	}
-	return 0;
-}
+	private:
+		std::string	str;
+	public:
+		RPN();
+		~RPN();
+		RPN(const RPN &ref);
+		RPN &operator=(const RPN &ref);
+		RPN(char const *str); // The right way
+};
