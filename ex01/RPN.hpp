@@ -6,11 +6,12 @@
 /*   By: htrindad <htrindad@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 03:55:06 by htrindad          #+#    #+#             */
-/*   Updated: 2026/05/01 04:09:52 by htrindad         ###   ########.fr       */
+/*   Updated: 2026/05/01 04:11:56 by htrindad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
+#include <list>
 
 class RPN
 {
