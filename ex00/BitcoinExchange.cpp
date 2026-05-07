@@ -6,7 +6,7 @@
 /*   By: htrindad <htrindad@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/14 09:57:45 by htrindad          #+#    #+#             */
-/*   Updated: 2026/05/01 04:10:31 by htrindad         ###   ########.fr       */
+/*   Updated: 2026/05/07 12:46:57 by htrindad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,61 @@ const char *BitcoinExchange::FileNotOpen::what() const throw() { return "Error o
 const char *BitcoinExchange::InvalidFile::what() const throw() { return "Invalid file"; }
 
 //Work
+static inline bool	dateAnomaly(const std::size_t &year, const std::size_t &month, const std::size_t &day)
+{
+	if (year > 2026 || month > 12 || day > 31)
+		return true;
+	if (month == 2 && day > 29)
+		return true;
+	if (month == 2 && day > 28 && (year % 400 || (year % 4 && !(year % 100))))
+		return true;
+	if (day > 30)
+	{
+		switch (month)
+		{
+			case 9:
+				return true;
+			case 4:
+				return true;
+			case 6:
+				return true;
+			case 11:
+				return true;
+			default:
+				return false;
+		}
+	}
+	return false;
+}
+
+static inline void	dateCheck(const std::string &date)
+{
+	std::istringstream	ss(date);
+	std::string		year;
+	std::string		month;
+	std::string		day;
+	std::size_t		value[3];
+	
+	std::getline(ss, year, '-');
+	std::getline(ss, month, '-');
+	std::getline(ss, day);
+	std::istringstream(year) >> value[0];
+	std::istringstream(month) >> value[1];
+	std::istringstream(day) >> value[2];
+	if (value[0] > 2026)
+		throw std::runtime_error("Error: invalid year");
+	if (value[1] > 12)
+		throw std::runtime_error("Error: invalid month");
+	if (dateAnomaly(value[0], value[1], value[2]))
+		throw std::runtime_error("Error: invalid date");
+}
+
+static inline void	btcCheck(const float &btc)
+{
+	if (btc < 0)
+		throw std::runtime_error("Error: not a positive number");
+}
+
 static inline std::map<std::string, float> fileParser(std::ifstream &file)
 {
 	std::map<std::string, float>	m;
@@ -30,8 +85,10 @@ static inline std::map<std::string, float> fileParser(std::ifstream &file)
 	{
 		std::istringstream ss(line);
 		std::getline(ss, date, ',');
+		dateCheck(date);
 		std::getline(ss, btc);
 		std::istringstream(btc) >> value;
+		btcCheck(value);
 		m.insert(std::make_pair(date, value));
 	}
 	return m;
@@ -60,8 +117,12 @@ static inline void finders(const std::map<std::string, float> &m, std::ifstream 
 	while (std::getline(f, line))
 	{
 		fo = line.find_first_of("|");
+		if (fo == std::string::npos)
+			throw BitcoinExchange::InvalidFile();
 		date = line.substr(0, fo);
+		dateCheck(date);
 		std::istringstream(line.substr(fo + 1)) >> btc;
+		btcCheck(btc);
 		start = date.find_first_not_of(" \t");
 		end = date.find_last_not_of(" \t");
 		if (start != std::string::npos && end != std::string::npos)
