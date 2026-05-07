@@ -6,7 +6,7 @@
 /*   By: htrindad <htrindad@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 05:28:32 by htrindad          #+#    #+#             */
-/*   Updated: 2026/05/06 07:29:47 by htrindad         ###   ########.fr       */
+/*   Updated: 2026/05/07 12:04:31 by htrindad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,13 @@
 
 //CDO
 PmergeMe::PmergeMe() {}
-Pmergeme::~PmergeMe() {}
-PmergeMe::PmergeMe(const PmergeMe &ref) {}
-PmergeMe &PmergeMe::operator=(const PmergeMe &ref) { return *this; }
+PmergeMe::~PmergeMe() {}
+PmergeMe::PmergeMe(const PmergeMe &ref) { (void)ref; }
+PmergeMe &PmergeMe::operator=(const PmergeMe &ref)
+{
+	(void)ref;
+	return *this;
+}
 
 // main func
 
@@ -45,7 +49,7 @@ static inline bool	digitVer(const char *av)
 	return false;
 }
 
-static inline void	msv(std::vector<uint32_t> &v, std::size_t s, std::size_t m, std::size_t e)
+void	PmergeMe::mergeSort(std::vector<uint32_t> &v, std::size_t s, std::size_t m, std::size_t e)
 {
 	std::vector<uint32_t>	l(m - s + 1);
 	std::vector<uint32_t>	r(e - m);
@@ -71,7 +75,7 @@ static inline void	msv(std::vector<uint32_t> &v, std::size_t s, std::size_t m, s
 		v[d[2]++] = r[d[1]++];
 }
 
-static inline void	msd(std::deque<uint32_t> &d, std::size_t s, std::size_t m, std::size_t e)
+void	PmergeMe::mergeSort(std::deque<uint32_t> &d, std::size_t s, std::size_t m, std::size_t e)
 {
 	std::size_t		dig[3];
 	std::deque<uint32_t>	l(m - s + 1);
@@ -110,10 +114,13 @@ void	PmergeMe::fordJohnsonSort(std::vector<uint32_t> &v, std::size_t s, std::siz
 			for (std::size_t i = s + 1; i <= e; i++)
 			{
 				h = v[i];
-				j = i - 1;
-				for (; j >= s && v[j] > h; --j)
-					v[j + 1] = v[j];
-				v[j + 1] = h;
+				j = i;
+				while (j > s && v[j - 1] > h)
+				{
+					v[j] = v[j - 1];
+					j--;
+				}
+				v[j] = h;
 			}
 		}
 		else
@@ -121,7 +128,7 @@ void	PmergeMe::fordJohnsonSort(std::vector<uint32_t> &v, std::size_t s, std::siz
 			reset = s + (e - s) / 2;
 			fordJohnsonSort(v, s, reset);
 			fordJohnsonSort(v, reset + 1, e);
-			msv(v, s, reset, e);
+			PmergeMe::mergeSort(v, s, reset, e);
 		}
 	}
 }
@@ -138,32 +145,40 @@ void	PmergeMe::fordJohnsonSort(std::deque<uint32_t> &d, std::size_t s, std::size
 		{
 			for (std::size_t i = s + 1; i <= e; i++)
 			{
-				h = v[i];
-				j = i - 1;
-				for (; j >= s && v[i] > h; --j)
-					v[j + 1] = v[j];
-				v[j + 1] = h;
+				h = d[i];
+				j = i;
+				while (j > s && d[j - 1] > h)
+				{
+					d[j] = d[j - 1];
+					j--;
+				}
+				d[j] = h;
 			}
 		}
 		else
 		{
 			reset = s + (e - s) / 2;
 			fordJohnsonSort(d, s, reset);
-			fordJohnsonSort(d, s + 1, e);
-			msd(d, s, reset, e);
+			fordJohnsonSort(d, reset + 1, e);
+			PmergeMe::mergeSort(d, s, reset, e);
 		}
 	}
 }
 
-void PmergeMe::mis(const char **av)
+void PmergeMe::mis(char **av, const int &ac)
 {
 	std::vector<uint32_t>	v;
 	std::deque<uint32_t>	d;
 	uint64_t		nbr;
 	std::clock_t		c[2];
 	double			time[2];
+	std::size_t		s;
 
-	for (std::size_t i = 1; av[i]; i++) // parsing
+	if (ac == 2)
+		s = 0;
+	else
+		s = 1;
+	for (std::size_t i = s; av[i]; i++) // parsing
 	{
 		if (digitVer(av[i]))
 			throw std::runtime_error("Error: not a digit, or number is too big");
@@ -178,12 +193,12 @@ void PmergeMe::mis(const char **av)
 		std::cout << d[i] << ' ';
 	std::cout << '\n';
 	c[0] = std::clock();
-	PmergeMe::fordJohnsonSort(v, 0, v.size());
-	c[1] = std::end();
+	PmergeMe::fordJohnsonSort(v, 0, v.size() - 1);
+	c[1] = std::clock();
 	time[0] = (double)(c[1] - c[0]) / CLOCKS_PER_SEC * 1e6;
 	c[0] = std::clock();
-	PmergeMe::fordJohnsonSort(d, 0, d.size());
-	c[1] = std::end();
+	PmergeMe::fordJohnsonSort(d, 0, d.size() - 1);
+	c[1] = std::clock();
 	time[1] = (double)(c[1] - c[0]) / CLOCKS_PER_SEC * 1e6;
 	std::cout << "After:\t";
 	for (std::size_t i = 0; i < v.size(); i++)

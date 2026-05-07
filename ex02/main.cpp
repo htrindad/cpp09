@@ -6,11 +6,22 @@
 /*   By: htrindad <htrindad@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 06:01:05 by htrindad          #+#    #+#             */
-/*   Updated: 2026/05/06 07:57:11 by htrindad         ###   ########.fr       */
+/*   Updated: 2026/05/07 11:36:05 by htrindad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PmergeMe.hpp"
+
+inline char	*smallString(const std::string &original, const int &s, const int &i)
+{
+	std::string	tmp;
+	char		*ret;
+
+	tmp = original.substr(s, i - s);
+	ret = new char[tmp.length() + 1];
+	std::strcpy(ret, tmp.c_str());
+	return ret;
+}
 
 inline char	**split(char const *str, char const &del)
 {
@@ -29,7 +40,7 @@ inline char	**split(char const *str, char const &del)
 		if (str[j] != del)
 		{
 			t++;
-			while (s[j] && s[j] != del)
+			while (str[j + 1] && str[j] != del)
 				j++;
 		}
 	}
@@ -47,7 +58,7 @@ inline char	**split(char const *str, char const &del)
 			s = i;
 			while (str[i] && str[i] != del)
 				i++;
-			ptr[l++] = ss.substr(s, i - s);
+			ptr[l++] = smallString(ss, s, i);
 		}
 	}
 	ptr[l] = NULL;
@@ -58,14 +69,17 @@ int main(int ac, char **av)
 {
 	if (ac < 2)
 		return (std::cerr << "Not enough args\n", -1);
-
 	try
 	{
 		if (ac == 2)
 			av = split(av[1], ' ');
-		PmergeMe::mis(av);
+		PmergeMe::mis(av, ac);
 		if (ac == 2)
+		{
+			for (std::size_t i = 0; av[i]; i++)
+				delete[] av[i];
 			delete[] av;
+		}
 	}
 	catch (std::exception &e)
 	{

@@ -1,5 +1,5 @@
 NAME = PmergeMe
-SRC = Pmerge.cpp main.cpp
+SRC = PmergeMe.cpp main.cpp
 OBJ = $(SRC:.cpp=.o)
 CPPFLAGS = -Wall -Werror -Wextra -O3 -std=c++98
 
