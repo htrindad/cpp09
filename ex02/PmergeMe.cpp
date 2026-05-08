@@ -6,7 +6,7 @@
 /*   By: htrindad <htrindad@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 05:28:32 by htrindad          #+#    #+#             */
-/*   Updated: 2026/05/07 12:04:31 by htrindad         ###   ########.fr       */
+/*   Updated: 2026/05/08 18:05:40 by htrindad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,8 @@ static inline bool	digitVer(const char *av)
 	while (std::isspace(av[i]))
 		i++;
 	if (av[i] == '+' || av[i] == '-')
-	{
-		if (av[i] == '-')
+		if (av[i++] == '-')
 			return true;
-		i++;
-	}
 	while (std::isdigit(av[i]))
 	{
 		i++;
