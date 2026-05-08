@@ -6,7 +6,7 @@
 /*   By: htrindad <htrindad@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 04:09:57 by htrindad          #+#    #+#             */
-/*   Updated: 2026/05/01 06:16:10 by htrindad         ###   ########.fr       */
+/*   Updated: 2026/05/08 17:59:08 by htrindad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,18 +36,24 @@ void RPN::solver(char const *av)
 	std::list<int>		l;
 	int			a;
 	int			b;
+	int			t;
 
 	while (ss >> str)
 	{
 		if (std::isdigit(str[0]))
+		{
+			t = std::atoi(str.c_str());
+			if (t < 0 || t > 9)
+				throw std::runtime_error("Error: number is not a single digit");
 			l.push_back(std::atoi(str.c_str()));
+		}
 		else
 		{
 			if (l.size() < 2)
 				throw std::runtime_error("Error");
 			b = l.back(); l.pop_back();
 			a = l.back(); l.pop_back();
-			switch(str[0])
+			switch (str[0])
 			{
 				case '+':
 					l.push_back(a + b);

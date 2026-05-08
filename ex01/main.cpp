@@ -6,7 +6,7 @@
 /*   By: htrindad <htrindad@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 05:18:19 by htrindad          #+#    #+#             */
-/*   Updated: 2026/05/01 06:05:44 by htrindad         ###   ########.fr       */
+/*   Updated: 2026/05/08 17:53:21 by htrindad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int main(int ac, char **av)
 	}
 	catch (std::exception &e)
 	{
-		std::cerr << "Something went wrong\n";
+		std::cerr << "Something went wrong: " << e.what() << '\n';
 		return -1;
 	}
 	return 0;
