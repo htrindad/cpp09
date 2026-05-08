@@ -6,7 +6,7 @@
 /*   By: htrindad <htrindad@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/14 09:57:45 by htrindad          #+#    #+#             */
-/*   Updated: 2026/05/07 12:46:57 by htrindad         ###   ########.fr       */
+/*   Updated: 2026/05/08 17:49:57 by htrindad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,26 +116,33 @@ static inline void finders(const std::map<std::string, float> &m, std::ifstream 
 	std::getline(f, line);
 	while (std::getline(f, line))
 	{
-		fo = line.find_first_of("|");
-		if (fo == std::string::npos)
-			throw BitcoinExchange::InvalidFile();
-		date = line.substr(0, fo);
-		dateCheck(date);
-		std::istringstream(line.substr(fo + 1)) >> btc;
-		btcCheck(btc);
-		start = date.find_first_not_of(" \t");
-		end = date.find_last_not_of(" \t");
-		if (start != std::string::npos && end != std::string::npos)
-			date = date.substr(start, end - start + 1);
-		it = m.lower_bound(date);
-		if (it == m.end() || it->first != date)
+		try
 		{
-			if (it == m.begin())
-				throw std::range_error("Error with the date found");
-			else
-				it--;
+			fo = line.find_first_of("|");
+			if (fo == std::string::npos)
+				throw BitcoinExchange::InvalidFile();
+			date = line.substr(0, fo);
+			dateCheck(date);
+			std::istringstream(line.substr(fo + 1)) >> btc;
+			btcCheck(btc);
+			start = date.find_first_not_of(" \t");
+			end = date.find_last_not_of(" \t");
+			if (start != std::string::npos && end != std::string::npos)
+				date = date.substr(start, end - start + 1);
+			it = m.lower_bound(date);
+			if (it == m.end() || it->first != date)
+			{
+				if (it == m.begin())
+					throw std::range_error("Error with the date found");
+				else
+					it--;
+			}
+			std::cout << date << " => " << btc << " = " << (btc * it->second) << '\n';
 		}
-		std::cout << date << " => " << btc << " = " << (btc * it->second) << '\n';
+		catch (std::exception &e)
+		{
+			std::cerr << "Error: on line '" << line << "': " << e.what() << '\n';
+		}
 	}
 }
 
