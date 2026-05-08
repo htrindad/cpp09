@@ -6,7 +6,7 @@
 /*   By: htrindad <htrindad@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 06:01:05 by htrindad          #+#    #+#             */
-/*   Updated: 2026/05/08 18:07:23 by htrindad         ###   ########.fr       */
+/*   Updated: 2026/05/08 18:09:19 by htrindad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,10 @@ int main(int ac, char **av)
 		if (ac == 2)
 			av = split(av[1], ' ');
 		if (av[0] == NULL)
+		{
+			delete[] av;
 			return (std::cerr << "Error: alloc fail\n", -1);
+		}
 		PmergeMe::mis(av, ac);
 		if (ac == 2)
 		{
