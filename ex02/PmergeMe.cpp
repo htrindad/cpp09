@@ -6,7 +6,7 @@
 /*   By: htrindad <htrindad@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 05:28:32 by htrindad          #+#    #+#             */
-/*   Updated: 2026/05/08 18:05:40 by htrindad         ###   ########.fr       */
+/*   Updated: 2026/05/09 18:48:43 by htrindad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,140 +26,244 @@ PmergeMe &PmergeMe::operator=(const PmergeMe &ref)
 
 static inline bool	digitVer(const char *av)
 {
-	std::size_t	i;
-	std::size_t	l;
+	std::size_t	i = 0, l = 0;
 
 	i = 0;
 	l = 0;
-	while (std::isspace(av[i]))
-		i++;
+	while (std::isspace(av[i])) i++;
 	if (av[i] == '+' || av[i] == '-')
-		if (av[i++] == '-')
-			return true;
-	while (std::isdigit(av[i]))
-	{
-		i++;
-		l++;
-	}
-	if (l > 10 || !l)
-		return true;
-	return false;
+		if (av[i++] == '-') return true;
+	while (std::isdigit(av[i])) { i++; l++; }
+	return (l > 10 || !l);
 }
 
-void	PmergeMe::mergeSort(std::vector<uint32_t> &v, std::size_t s, std::size_t m, std::size_t e)
+static uint32_t	jacobStahl(uint32_t n) // necessity of the Ford Johnson
 {
-	std::vector<uint32_t>	l(m - s + 1);
-	std::vector<uint32_t>	r(e - m);
-	std::size_t		d[3];
-
-	for (d[0] = 0; d[0] < (m - s + 1); ++d[0])
-		l[d[0]] = v[s + d[0]];
-	for (d[1] = 0; d[1] < (e - m); ++d[1])
-		r[d[1]] = v[m + 1 + d[1]];
-	d[0] = 0;
-	d[1] = 0;
-	d[2] = s;
-	while (d[0] < (m - s + 1) && d[1] < (e - m))
-	{
-		if (l[d[0]] <= r[d[1]])
-			v[d[2]++] = l[d[0]++];
-		else
-			v[d[2]++] = r[d[1]++];
-	}
-	while (d[0] < (m - s + 1))
-		v[d[2]++] = l[d[0]++];
-	while (d[1] < (e - m))
-		v[d[2]++] = r[d[1]++];
+	if (n < 2) return n;
+	return jacobStahl(n - 1) + 2 * jacobStahl(n - 2);
 }
 
-void	PmergeMe::mergeSort(std::deque<uint32_t> &d, std::size_t s, std::size_t m, std::size_t e)
+static inline std::vector<std::size_t>	jacobInsertOrder(const std::size_t &count)
 {
-	std::size_t		dig[3];
-	std::deque<uint32_t>	l(m - s + 1);
-	std::deque<uint32_t>	r(e - m);
+	std::vector<std::size_t> o;
 
-	for (dig[0] = 0; dig[0] < (m - s + 1); ++dig[0])
-		l[dig[0]] = d[s + dig[0]];
-	for (dig[1] = 0; dig[1] < (e - m); ++dig[1])
-		r[dig[1]] = d[m + 1 + dig[1]];
-	dig[0] = 0;
-	dig[1] = 0;
-	dig[2] = s;
-	while (dig[0] < (m - s + 1) && dig[1] < (e - m))
+	if (count < 2) return o;
+	std::size_t prev = 1, next = 3;
+	while (jacobStahl(next) <= count)
 	{
-		if (l[dig[0]] <= r[dig[1]])
-			d[dig[2]++] = l[dig[0]++];
-		else
-			d[dig[2]++] = r[dig[1]++];
+		std::size_t up = jacobStahl(next);
+		for (std::size_t i = up; i > prev; --i)
+			o.push_back(i - 1);
+		prev = up;
+		next++;
 	}
-	while (dig[0] < (m - s + 1))
-		d[dig[2]++] = l[dig[0]++];
-	while (dig[1] < (e - m))
-		d[dig[2]++] = r[dig[1]++];
+	if (count > prev)
+		for (std::size_t i = count; i > prev; --i)
+			o.push_back(i - 1);
+	return o;
+}
+
+void	PmergeMe::jacobStahlSort(std::vector<uint32_t> &v, std::size_t s, std::size_t e)
+{
+	typedef std::pair<uint32_t, uint32_t> p;
+	std::size_t size = e - s + 1;
+
+	if (size < 11)
+	{
+		for (std::size_t i = s + 1; i <= e; ++i)
+		{
+			uint32_t key = v[i];
+			std::size_t j = i;
+			while (j > s && key < v[j - 1])
+			{
+				v[j] = v[j - 1];
+				j--;
+			}
+			v[j] = key;
+		}
+		return ;
+	}
+	std::vector<p>	pair;
+	uint32_t		stra;
+	bool			hs = size % 2;
+	for (std::size_t i = s; i + 1 <= e; i += 2)
+	{
+		uint32_t a = v[i];
+		uint32_t b = v[i + 1];
+
+		if (b < a)
+			std::swap(a, b);
+		pair.push_back(p(a, b));
+	}
+	if (hs)
+		stra = v[e];
+	std::size_t k = pair.size();
+	std::vector<uint32_t> big(k), small(k);
+	for (std::size_t i = 0; i < k; ++i)
+	{
+		big[i] = pair[i].first;
+		small[i] = pair[i].second;
+	}
+	jacobStahlSort(big, 0, k - 1);
+	std::vector<uint32_t> ss(k);
+	for (std::size_t i = 0; i < k; ++i)
+	{
+		uint32_t cb = big[i];
+		for (std::size_t j = 0; j < pair.size(); ++j)
+		{
+			if (pair[j].first == cb)
+			{
+				ss[i] = pair[j].second;
+				break ;
+			}
+		}
+	}
+	std::vector<uint32_t> c;
+	c.push_back(ss[0]);
+	c.insert(c.end(), big.begin(), big.end());
+	std::vector<std::size_t> pos(k);
+	for (std::size_t i = 0; i < k; ++i)
+		pos[i] = i + 1;
+	std::vector<std::size_t> o = jacobInsertOrder(k);
+	for (std::size_t i = 0; i < o.size(); ++i)
+	{
+		std::size_t id = o[i];
+		std::size_t lim = pos[id];
+		uint32_t value = ss[id];
+		std::size_t l = 0, r = lim;
+		while (l < r)
+		{
+			std::size_t m = l + (r - l) / 2;
+			if (value < c[m])
+				r = m;
+			else
+				l = m + 1;
+		}
+		c.insert(c.begin() + l, value);
+		for (std::size_t j = 0; j < k; ++j)
+			if (pos[j] >= l)
+				pos[j]++;
+	}
+	if (hs)
+	{
+		std::size_t l = 0, r = c.size();
+		while (l < r)
+		{
+			std::size_t m = l + (r - l) / 2;
+			if (stra < c[m])
+				r = m;
+			else
+				l = m + 1;
+		}
+		c.insert(c.begin() + left, stra);
+	}
+	std::copy(c.begin(), c.end(), v.begin() + s);
+}
+
+void	PmergeMe::jacobStahlSort(std::deque<uint32_t> &d, std::size_t s, std::size_t e)
+{
+	typedef std::pair<uint32_t, uint32_t> pair;
+	std::size_t size = e - s + 1;
+
+	if (size < 11)
+	{
+		for (std::size_t i = s + 1; i <= e; ++i)
+		{
+			uint32_t k = d[i];
+			std::size_t j = i;
+			while (j > s && k < d[j - 1])
+			{
+				d[j] = d[j - 1];
+				j--;
+			}
+			d[j] = k;
+		}
+		return ;
+	}
+	std::deque<pair>	p;
+	uint32_t		stra;
+	bool			hs = size % 2;
+	for (std::size_t i = s; i + 1 <= e; i += 2)
+	{
+		uint32_t a = d[i];
+		uint32_t b = d[i + 1];
+		if (b < a)
+			std::swap(a, b);
+		p.push_back(pair(a, b));
+	}
+	if (hs)
+		stra = d[e];
+	std::size_t k = p.size();
+	std::deque<uint32_t> big(k), small(k);
+	for (std::size_t i = 0; i < k; ++i)
+	{
+		big[i] = p[i].first;
+		small[i] = p[i].second;
+	}
+	jacobStahlSort(big, 0, k - 1);
+	std::deque<uint32_t> ss(k);
+	for (std::size_t i = 0; i < k; ++i)
+	{
+		uint32_t cb = big[i];
+		for (std::size_t j = 0; j < p.size(); ++j)
+		{
+			if (p[j].first == cb)
+			{
+				ss[i] = p[j].second;
+				break ;
+			}
+		}
+	}
+	std::deque<uint32_t> c;
+	c.push_back(ss[0]);
+	c.insert(c.end(), big.begin(), big.end());
+	std::vector<std::size_t> pos(k);
+	for (std::size_t i = 0; i < k; ++i)
+		pos[i] = i + 1;
+	std::vector<std::size_t> o = jacobInsertOrder(k);
+	for (std::size_t i = 0; i < o.size(); ++i)
+	{
+		std::size_t id = o[i];
+		std::size_t lim = pos[i];
+		uint32_t value = ss[id];
+		std::size_t l = 0, r = lim;
+		while (l < r)
+		{
+			std::size_t m = l + (r - s) / 2;
+			if (value < c[m])
+				r = m;
+			else
+				l = m + 1;
+		}
+		c.insert(c.begin() + l, value);
+		for (std::size_t j = 0; j < k; ++j)
+			if (pos[j] >= l)
+				pos[j]++;
+	}
+	if (hs)
+	{
+		std::size_t l = 0, r = c.size();
+		while (l < r)
+		{
+			std::size_t m = l + (r - l) / 2;
+			if (stra < c[m])
+				r = m;
+			else
+				l = m + 1;
+		}
+		c.insert(c.begin() + l, stra);
+	}
+	std::copy(c.begin(), c.end(), d.begin() + s);
 }
 
 void	PmergeMe::fordJohnsonSort(std::vector<uint32_t> &v, std::size_t s, std::size_t e)
 {
-	uint32_t	reset;
-	uint32_t	h;
-	std::size_t	j;
-
-	if (s < e)
-	{
-		if ((e - s) < 10)
-		{
-			for (std::size_t i = s + 1; i <= e; i++)
-			{
-				h = v[i];
-				j = i;
-				while (j > s && v[j - 1] > h)
-				{
-					v[j] = v[j - 1];
-					j--;
-				}
-				v[j] = h;
-			}
-		}
-		else
-		{
-			reset = s + (e - s) / 2;
-			fordJohnsonSort(v, s, reset);
-			fordJohnsonSort(v, reset + 1, e);
-			PmergeMe::mergeSort(v, s, reset, e);
-		}
-	}
+	jacobStahlSort(v, s, e);
 }
 
 void	PmergeMe::fordJohnsonSort(std::deque<uint32_t> &d, std::size_t s, std::size_t e)
 {
-	uint32_t	reset;
-	uint32_t	h;
-	std::size_t	j;
-
-	if (s < e)
-	{
-		if ((e - s) < 10)
-		{
-			for (std::size_t i = s + 1; i <= e; i++)
-			{
-				h = d[i];
-				j = i;
-				while (j > s && d[j - 1] > h)
-				{
-					d[j] = d[j - 1];
-					j--;
-				}
-				d[j] = h;
-			}
-		}
-		else
-		{
-			reset = s + (e - s) / 2;
-			fordJohnsonSort(d, s, reset);
-			fordJohnsonSort(d, reset + 1, e);
-			PmergeMe::mergeSort(d, s, reset, e);
-		}
-	}
+	jacobStahlSort(d, s, e);
 }
 
 void PmergeMe::mis(char **av, const int &ac)
@@ -190,11 +294,11 @@ void PmergeMe::mis(char **av, const int &ac)
 		std::cout << d[i] << ' ';
 	std::cout << '\n';
 	c[0] = std::clock();
-	PmergeMe::fordJohnsonSort(v, 0, v.size() - 1);
+	fordJohnsonSort(v, 0, v.size() - 1);
 	c[1] = std::clock();
 	time[0] = (double)(c[1] - c[0]) / CLOCKS_PER_SEC * 1e6;
 	c[0] = std::clock();
-	PmergeMe::fordJohnsonSort(d, 0, d.size() - 1);
+	fordJohnsonSort(d, 0, d.size() - 1);
 	c[1] = std::clock();
 	time[1] = (double)(c[1] - c[0]) / CLOCKS_PER_SEC * 1e6;
 	std::cout << "After:\t";
