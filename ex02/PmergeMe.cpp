@@ -6,7 +6,7 @@
 /*   By: htrindad <htrindad@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 05:28:32 by htrindad          #+#    #+#             */
-/*   Updated: 2026/05/09 18:48:43 by htrindad         ###   ########.fr       */
+/*   Updated: 2026/05/10 18:18:40 by htrindad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,7 @@ void	PmergeMe::jacobStahlSort(std::vector<uint32_t> &v, std::size_t s, std::size
 			else
 				l = m + 1;
 		}
-		c.insert(c.begin() + left, stra);
+		c.insert(c.begin() + l, stra);
 	}
 	std::copy(c.begin(), c.end(), v.begin() + s);
 }
@@ -224,12 +224,12 @@ void	PmergeMe::jacobStahlSort(std::deque<uint32_t> &d, std::size_t s, std::size_
 	for (std::size_t i = 0; i < o.size(); ++i)
 	{
 		std::size_t id = o[i];
-		std::size_t lim = pos[i];
+		std::size_t lim = pos[id];
 		uint32_t value = ss[id];
 		std::size_t l = 0, r = lim;
 		while (l < r)
 		{
-			std::size_t m = l + (r - s) / 2;
+			std::size_t m = l + (r - l) / 2;
 			if (value < c[m])
 				r = m;
 			else
