@@ -6,7 +6,7 @@
 /*   By: htrindad <htrindad@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 05:28:32 by htrindad          #+#    #+#             */
-/*   Updated: 2026/05/10 18:21:24 by htrindad         ###   ########.fr       */
+/*   Updated: 2026/05/10 19:49:41 by htrindad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void	PmergeMe::jacobStahlSort(std::vector<uint32_t> &v, std::size_t s, std::size
 		uint32_t a = v[i];
 		uint32_t b = v[i + 1];
 
-		if (b < a)
+		if (a < b)
 			std::swap(a, b);
 		pair.push_back(p(a, b));
 	}
@@ -104,23 +104,29 @@ void	PmergeMe::jacobStahlSort(std::vector<uint32_t> &v, std::size_t s, std::size
 		big[i] = pair[i].first;
 		small[i] = pair[i].second;
 	}
-	jacobStahlSort(big, 0, k - 1);
-	std::vector<uint32_t> ss(k);
+	std::vector<std::size_t> idx(k);
+	for (std::size_t i = 0; i < k; ++i)
+		idx[i] = i;
+	for (std::size_t i = 1; i < k; ++i)
+	{
+		std::size_t kid = idx[i];
+		std::size_t j = i;
+		while (j && big[kid] < big[idx[j - 1]])
+		{
+			idx[j] = idx[j - 1];
+			j--;
+		}
+		idx[j] = kid;
+	}
+	std::vector<uint32_t> sb(k), ss(k);
 	for (std::size_t i = 0; i < k; ++i)
 	{
-		uint32_t cb = big[i];
-		for (std::size_t j = 0; j < pair.size(); ++j)
-		{
-			if (pair[j].first == cb)
-			{
-				ss[i] = pair[j].second;
-				break ;
-			}
-		}
+		sb[i] = big[idx[i]];
+		ss[i] = small[idx[i]];
 	}
 	std::vector<uint32_t> c;
 	c.push_back(ss[0]);
-	c.insert(c.end(), big.begin(), big.end());
+	c.insert(c.end(), sb.begin(), sb.end());
 	std::vector<std::size_t> pos(k);
 	for (std::size_t i = 0; i < k; ++i)
 		pos[i] = i + 1;
@@ -131,6 +137,7 @@ void	PmergeMe::jacobStahlSort(std::vector<uint32_t> &v, std::size_t s, std::size
 		std::size_t lim = pos[id];
 		uint32_t value = ss[id];
 		std::size_t l = 0, r = lim;
+
 		while (l < r)
 		{
 			std::size_t m = l + (r - l) / 2;
@@ -147,6 +154,7 @@ void	PmergeMe::jacobStahlSort(std::vector<uint32_t> &v, std::size_t s, std::size
 	if (hs)
 	{
 		std::size_t l = 0, r = c.size();
+
 		while (l < r)
 		{
 			std::size_t m = l + (r - l) / 2;
@@ -187,7 +195,7 @@ void	PmergeMe::jacobStahlSort(std::deque<uint32_t> &d, std::size_t s, std::size_
 	{
 		uint32_t a = d[i];
 		uint32_t b = d[i + 1];
-		if (b < a)
+		if (a < b)
 			std::swap(a, b);
 		p.push_back(pair(a, b));
 	}
@@ -200,23 +208,29 @@ void	PmergeMe::jacobStahlSort(std::deque<uint32_t> &d, std::size_t s, std::size_
 		big[i] = p[i].first;
 		small[i] = p[i].second;
 	}
-	jacobStahlSort(big, 0, k - 1);
-	std::deque<uint32_t> ss(k);
+	std::vector<std::size_t> idx(k);
+	for (std::size_t i = 0; i < k; ++i)
+		idx[i] = i;
+	for (std::size_t i = 1; i < k; ++i)
+	{
+		std::size_t kid = idx[i];
+		std::size_t j = i;
+		while (j && big[kid] < big[idx[j - 1]])
+		{
+			idx[j] = idx[j - 1];
+			j--;
+		}
+		idx[j] = kid;
+	}
+	std::vector<uint32_t> sb(k), ss(k);
 	for (std::size_t i = 0; i < k; ++i)
 	{
-		uint32_t cb = big[i];
-		for (std::size_t j = 0; j < p.size(); ++j)
-		{
-			if (p[j].first == cb)
-			{
-				ss[i] = p[j].second;
-				break ;
-			}
-		}
+		sb[i] = big[idx[i]];
+		ss[i] = small[idx[i]];
 	}
-	std::deque<uint32_t> c;
+	std::vector<uint32_t> c;
 	c.push_back(ss[0]);
-	c.insert(c.end(), big.begin(), big.end());
+	c.insert(c.end(), sb.begin(), sb.end());
 	std::vector<std::size_t> pos(k);
 	for (std::size_t i = 0; i < k; ++i)
 		pos[i] = i + 1;
@@ -227,9 +241,11 @@ void	PmergeMe::jacobStahlSort(std::deque<uint32_t> &d, std::size_t s, std::size_
 		std::size_t lim = pos[id];
 		uint32_t value = ss[id];
 		std::size_t l = 0, r = lim;
+
 		while (l < r)
 		{
 			std::size_t m = l + (r - l) / 2;
+
 			if (value < c[m])
 				r = m;
 			else
@@ -243,9 +259,11 @@ void	PmergeMe::jacobStahlSort(std::deque<uint32_t> &d, std::size_t s, std::size_
 	if (hs)
 	{
 		std::size_t l = 0, r = c.size();
+
 		while (l < r)
 		{
 			std::size_t m = l + (r - l) / 2;
+
 			if (stra < c[m])
 				r = m;
 			else
