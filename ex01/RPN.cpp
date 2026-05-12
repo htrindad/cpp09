@@ -6,7 +6,7 @@
 /*   By: htrindad <htrindad@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 04:09:57 by htrindad          #+#    #+#             */
-/*   Updated: 2026/05/08 17:59:08 by htrindad         ###   ########.fr       */
+/*   Updated: 2026/05/12 20:54:43 by htrindad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,11 @@ void RPN::solver(char const *av)
 	int			a;
 	int			b;
 	int			t;
+	bool			integer = false;
 
 	while (ss >> str)
 	{
+		if (str.size() > 1) { integer = true; break ; }
 		if (std::isdigit(str[0]))
 		{
 			t = std::atoi(str.c_str());
@@ -76,6 +78,9 @@ void RPN::solver(char const *av)
 	}
 	if (l.size() > 1)
 		throw std::runtime_error("Error: Bad formating");
-	std::cout << l.back() << '\n';
-	l.pop_back();
+	if (!integer)
+	{
+		std::cout << l.back() << '\n';
+		l.pop_back();
+	}
 }
