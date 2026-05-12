@@ -6,7 +6,7 @@
 /*   By: htrindad <htrindad@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/14 09:57:45 by htrindad          #+#    #+#             */
-/*   Updated: 2026/05/08 17:49:57 by htrindad         ###   ########.fr       */
+/*   Updated: 2026/05/12 20:26:55 by htrindad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,6 @@ static inline void	dateCheck(const std::string &date)
 	std::istringstream(year) >> value[0];
 	std::istringstream(month) >> value[1];
 	std::istringstream(day) >> value[2];
-	if (value[0] > 2026)
-		throw std::runtime_error("Error: invalid year");
-	if (value[1] > 12)
-		throw std::runtime_error("Error: invalid month");
 	if (dateAnomaly(value[0], value[1], value[2]))
 		throw std::runtime_error("Error: invalid date");
 }
