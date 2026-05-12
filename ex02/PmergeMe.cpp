@@ -6,7 +6,7 @@
 /*   By: htrindad <htrindad@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 05:28:32 by htrindad          #+#    #+#             */
-/*   Updated: 2026/05/12 20:33:52 by htrindad         ###   ########.fr       */
+/*   Updated: 2026/05/12 20:43:17 by htrindad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static uint32_t	jacobStahl(uint32_t n) // necessity of the Ford Johnson
 	return jacobStahl(n - 1) + 2 * jacobStahl(n - 2);
 }
 
-static inline std::vector<std::size_t>	jacobInsertOrder(const std::size_t &count)
+static std::vector<std::size_t>	jacobInsertOrder(const std::size_t &count)
 {
 	std::vector<std::size_t> o;
 
