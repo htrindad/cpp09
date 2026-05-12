@@ -6,7 +6,7 @@
 /*   By: htrindad <htrindad@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/06 05:28:32 by htrindad          #+#    #+#             */
-/*   Updated: 2026/05/12 19:58:03 by htrindad         ###   ########.fr       */
+/*   Updated: 2026/05/12 20:08:24 by htrindad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void	PmergeMe::jacobStahlSort(std::vector<uint32_t> &v, std::size_t s, std::size
 		}
 		return ;
 	}
-	std::vector<p>	pair;
+	std::vector<p>		pair;
 	uint32_t		stra;
 	bool			hs = size % 2;
 	for (std::size_t i = s; i + 1 <= e; i += 2)
@@ -91,8 +91,7 @@ void	PmergeMe::jacobStahlSort(std::vector<uint32_t> &v, std::size_t s, std::size
 		uint32_t a = v[i];
 		uint32_t b = v[i + 1];
 
-		if (a < b)
-			std::swap(a, b);
+		if (a < b) std::swap(a, b);
 		pair.push_back(p(a, b));
 	}
 	if (hs)
@@ -187,8 +186,7 @@ void	PmergeMe::jacobStahlSort(std::deque<uint32_t> &d, std::size_t s, std::size_
 	{
 		uint32_t a = d[i];
 		uint32_t b = d[i + 1];
-		if (a < b)
-			std::swap(a, b);
+		if (a < b) std::swap(a, b);
 		p.push_back(pair(a, b));
 	}
 	if (hs)
