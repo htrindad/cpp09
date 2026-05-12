@@ -6,7 +6,7 @@
 /*   By: htrindad <htrindad@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 04:09:57 by htrindad          #+#    #+#             */
-/*   Updated: 2026/05/12 20:54:43 by htrindad         ###   ########.fr       */
+/*   Updated: 2026/05/12 20:57:27 by htrindad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,4 +83,6 @@ void RPN::solver(char const *av)
 		std::cout << l.back() << '\n';
 		l.pop_back();
 	}
+	else
+		throw std::runtime_error("Error: some weird formatting");
 }
