@@ -6,7 +6,7 @@
 /*   By: htrindad <htrindad@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 03:55:06 by htrindad          #+#    #+#             */
-/*   Updated: 2026/05/01 06:15:39 by htrindad         ###   ########.fr       */
+/*   Updated: 2026/05/12 20:30:05 by htrindad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,10 @@
 class RPN
 {
 	private:
-	public:
 		RPN();
 		~RPN();
 		RPN(const RPN &ref);
 		RPN &operator=(const RPN &ref);
+	public:
 		static void solver(char const *av);
 };
