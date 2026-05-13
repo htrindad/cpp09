@@ -6,7 +6,7 @@
 /*   By: htrindad <htrindad@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/14 09:57:45 by htrindad          #+#    #+#             */
-/*   Updated: 2026/05/12 20:26:55 by htrindad         ###   ########.fr       */
+/*   Updated: 2026/05/13 18:06:07 by htrindad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,19 @@ static inline void thrower(std::ifstream &stream)
 		throw BitcoinExchange::FileNotOpen();
 }
 
+static const inline std::string checker(const std::string &line, const std::size_t &fo)
+{
+	const std::string cpy = line.substr(fo + 1);
+	bool		nbr = false;
+
+	for (std::size_t i = 0; i < cpy.size(); i++)
+		if (std::isdigit(cpy[i]))
+			nbr = true;
+	if (nbr)
+		return cpy;
+	throw std::runtime_error("Error: Invalid number");
+}
+
 static inline void finders(const std::map<std::string, float> &m, std::ifstream &f)
 {
 	std::map<std::string, float>::const_iterator	it;
@@ -119,7 +132,7 @@ static inline void finders(const std::map<std::string, float> &m, std::ifstream 
 				throw BitcoinExchange::InvalidFile();
 			date = line.substr(0, fo);
 			dateCheck(date);
-			std::istringstream(line.substr(fo + 1)) >> btc;
+			std::istringstream(checker(line, fo)) >> btc;
 			btcCheck(btc);
 			start = date.find_first_not_of(" \t");
 			end = date.find_last_not_of(" \t");
