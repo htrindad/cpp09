@@ -6,7 +6,7 @@
 /*   By: htrindad <htrindad@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/14 09:57:45 by htrindad          #+#    #+#             */
-/*   Updated: 2026/05/13 18:06:07 by htrindad         ###   ########.fr       */
+/*   Updated: 2026/05/13 21:25:21 by htrindad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ const char *BitcoinExchange::InvalidFile::what() const throw() { return "Invalid
 //Work
 static inline bool	dateAnomaly(const std::size_t &year, const std::size_t &month, const std::size_t &day)
 {
-	if (year > 2026 || month > 12 || day > 31)
+	if (month > 12 || day > 31 || !year || !month || !day)
 		return true;
 	if (month == 2 && day > 29)
 		return true;
@@ -44,6 +44,16 @@ static inline bool	dateAnomaly(const std::size_t &year, const std::size_t &month
 	return false;
 }
 
+static inline void	stringCheck(const std::string &year, const std::string &month, const std::string &day)
+{
+	std::string data[3] = { year, month, day };
+
+	for (std::size_t i = 0; i < 3; i++)
+		data[i].erase(std::remove(data[i].begin(), data[i].end(), ' '), data[i].end());
+	if (data[0].size() != 4 || data[1].size() != 2 || data[2].size() != 2)
+		throw std::runtime_error("Error: Poor size");
+}
+
 static inline void	dateCheck(const std::string &date)
 {
 	std::istringstream	ss(date);
@@ -55,6 +65,7 @@ static inline void	dateCheck(const std::string &date)
 	std::getline(ss, year, '-');
 	std::getline(ss, month, '-');
 	std::getline(ss, day);
+	stringCheck(year, month, day);
 	std::istringstream(year) >> value[0];
 	std::istringstream(month) >> value[1];
 	std::istringstream(day) >> value[2];
@@ -64,8 +75,8 @@ static inline void	dateCheck(const std::string &date)
 
 static inline void	btcCheck(const float &btc)
 {
-	if (btc < 0)
-		throw std::runtime_error("Error: not a positive number");
+	if (btc > 1000)
+		throw std::runtime_error("Error: Non acceptable value");
 }
 
 static inline std::map<std::string, float> fileParser(std::ifstream &file)
@@ -81,10 +92,8 @@ static inline std::map<std::string, float> fileParser(std::ifstream &file)
 	{
 		std::istringstream ss(line);
 		std::getline(ss, date, ',');
-		dateCheck(date);
 		std::getline(ss, btc);
 		std::istringstream(btc) >> value;
-		btcCheck(value);
 		m.insert(std::make_pair(date, value));
 	}
 	return m;
@@ -98,15 +107,38 @@ static inline void thrower(std::ifstream &stream)
 		throw BitcoinExchange::FileNotOpen();
 }
 
-static const inline std::string checker(const std::string &line, const std::size_t &fo)
+static const inline std::string checker(const std::string &line, std::size_t fo)
 {
 	const std::string cpy = line.substr(fo + 1);
-	bool		nbr = false;
+	std::size_t i = 0;
+	uint8_t		options = 0;
 
-	for (std::size_t i = 0; i < cpy.size(); i++)
-		if (std::isdigit(cpy[i]))
-			nbr = true;
-	if (nbr)
+	while (i < cpy.size())
+	{
+		if (!std::isspace(cpy[i]))
+		{
+			if (std::isdigit(cpy[i]) && !(options & 1))
+				options |= 1;
+			if (!std::isdigit(cpy[i]) || options & 2)
+			{
+				if (options & 2)
+					throw std::runtime_error("Error: Number after space");
+				if (!std::isdigit(cpy[i]))
+				{
+					if (cpy[i] == '-')
+						throw std::runtime_error("Error: sign character not acceptable");
+					if (cpy[i] == '+' && !(options & 1)) { i++; continue ; }
+					if (cpy[i] == '.' && options & 1 && !(options & 4)) { options |= 4; i++; continue ; }
+					throw std::runtime_error("Error: Not a digit");
+				}
+			}
+		}
+		else
+			if (options & 1)
+				options |= 2;
+		i++;
+	}
+	if (options & 1)
 		return cpy;
 	throw std::runtime_error("Error: Invalid number");
 }

@@ -6,7 +6,7 @@
 /*   By: htrindad <htrindad@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/14 09:46:15 by htrindad          #+#    #+#             */
-/*   Updated: 2026/05/01 04:12:07 by htrindad         ###   ########.fr       */
+/*   Updated: 2026/05/13 20:24:05 by htrindad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <algorithm>
+#include <stdint.h>
 
 class BitcoinExchange
 {

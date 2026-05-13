@@ -1,0 +1,46 @@
+Error: bad input => 
+Error: bad input => | 2
+Error: bad input => 
+Error: bad input => 
+Error: bad input => 
+Error: bad input => 2009-01-01
+Error: bad input => 1998-01-01
+Error: bad input => 2011-1-03
+Error: bad input => 2011-01-3
+Error: bad input => 2011-13-03
+Error: bad input => 2011-01-32
+Error: bad input => 2011-00-04
+Error: bad input => 2011-01-00
+Error: bad input => 2001-42-42
+Error: bad input => 2011/01/03
+Error: bad input => 
+Error: bad input => 
+2009-01-02 => 0 * 0 = 0
+2009-01-02 => 1000 * 0 = 0
+Error: not a positive number.
+Error: too large a number.
+Error: too large a number.
+Error: too large a number.
+2009-01-02 => 34.2 * 0 = 0
+Error: not a positive number.
+Error: bad input => 
+Error: bad input => 
+Error: bad input => 12a
+Error: bad input => +34+34
+Error: bad input => -34-34
+Error: bad input => +34.2.2
+Error: bad input => 1.2.3
+Error: bad input => ++34
+Error: bad input => --34
+Error: bad input => +-34
+Error: bad input => 1-2
+Error: bad input => 1+2
+Error: bad input => .
+2009-01-02 => 0.3 * 0 = 0
+2009-01-02 => 2 * 0 = 0
+Error: bad input => 
+2010-10-13 => 10 * 0.1 = 1
+2010-10-14 => 10 * 0.1 = 1
+2010-10-16 => 10 * 0.12 = 1.2
+2022-03-29 => 10 * 47115.9 = 471159
+3000-10-16 => 10 * 47115.9 = 471159
