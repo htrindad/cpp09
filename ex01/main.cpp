@@ -6,17 +6,24 @@
 /*   By: htrindad <htrindad@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 05:18:19 by htrindad          #+#    #+#             */
-/*   Updated: 2026/05/13 21:26:08 by htrindad         ###   ########.fr       */
+/*   Updated: 2026/05/15 18:01:35 by htrindad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "RPN.hpp"
 
+static inline bool check(const char &av)
+{
+	if (!av || av == ' ')
+		return true;
+	return false;
+}
+
 int main(int ac, char **av)
 {
 	if (ac != 2)
 		return (std::cerr << "Not the right ammount of args\n", -1);
-	if (!av[1][0])
+	if (check(av[1][0]))
 		return (std::cerr << "Bad args\n", -1);
 	try
 	{
