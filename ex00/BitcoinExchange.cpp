@@ -6,7 +6,7 @@
 /*   By: htrindad <htrindad@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/14 09:57:45 by htrindad          #+#    #+#             */
-/*   Updated: 2026/05/13 21:25:21 by htrindad         ###   ########.fr       */
+/*   Updated: 2026/05/15 19:50:52 by htrindad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static inline bool	dateAnomaly(const std::size_t &year, const std::size_t &month
 		return true;
 	if (month == 2 && day > 29)
 		return true;
-	if (month == 2 && day > 28 && (year % 400 || (year % 4 && !(year % 100))))
+	if (month == 2 && day > 28 && (year % 4 || (year % 400 && !(year % 100))))
 		return true;
 	if (day > 30)
 	{
