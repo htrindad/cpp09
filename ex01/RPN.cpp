@@ -6,7 +6,7 @@
 /*   By: htrindad <htrindad@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 04:09:57 by htrindad          #+#    #+#             */
-/*   Updated: 2026/05/12 20:57:27 by htrindad         ###   ########.fr       */
+/*   Updated: 2026/06/06 17:40:48 by htrindad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void RPN::solver(char const *av)
 	}
 	if (l.size() > 1)
 		throw std::runtime_error("Error: Bad formating");
-	if (!integer)
+	if (!integer && l.back() >= 0)
 	{
 		std::cout << l.back() << '\n';
 		l.pop_back();
